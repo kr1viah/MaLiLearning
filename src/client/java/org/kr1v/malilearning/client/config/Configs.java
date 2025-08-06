@@ -68,17 +68,6 @@ public class Configs implements IConfigHandler
 		);
 	}
 
-	public static class Internal
-	{
-		public static final ConfigInteger       FLY_SPEED_PRESET                    = new ConfigInteger     ("flySpeedPreset", 0, 0, 3, "tweakeroo.config.internal.comment.flySpeedPreset").translatedName("tweakeroo.config.internal.name.flySpeedPreset");
-		public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "tweakeroo.config.internal.comment.gammaValueOriginal").translatedName("tweakeroo.config.internal.name.gammaValueOriginal");
-
-		public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-				FLY_SPEED_PRESET,
-				GAMMA_VALUE_ORIGINAL
-		);
-	}
-
 	public static void loadFromFile()
 	{
 		File configFile = new File(MinecraftClient.getInstance().runDirectory, "config/" + CONFIG_FILE_NAME);
@@ -92,8 +81,8 @@ public class Configs implements IConfigHandler
 				JsonObject root = element.getAsJsonObject();
 
 				ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-				ConfigUtils.readConfigBase(root, "Internal", Configs.Internal.OPTIONS);
 				ConfigUtils.readConfigBase(root, "Lists", Configs.Lists.OPTIONS);
+				ConfigUtils.readConfigBase(root, "Hotkeys", Hotkeys.HOTKEY_LIST);
 				ConfigUtils.readHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", Disable.OPTIONS);
 			}
 		}
@@ -108,8 +97,8 @@ public class Configs implements IConfigHandler
 			JsonObject root = new JsonObject();
 
 			ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-			ConfigUtils.writeConfigBase(root, "Internal", Configs.Internal.OPTIONS);
 			ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
+			ConfigUtils.writeConfigBase(root, "Hotkeys", Hotkeys.HOTKEY_LIST);
 			ConfigUtils.writeHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", Disable.OPTIONS);
 
 			JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));

@@ -11,5 +11,6 @@ public class MalilearningClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
+		RegisterHotkeys.registerHotkeys();
 	}
 }
