@@ -3,7 +3,7 @@
   "id": "malilearning",
   "version": "${version}",
   "name": "MaLiLearning",
-  "description": "Adds a ghost block command",
+  "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
@@ -12,9 +12,6 @@
   "entrypoints": {
     "client": [
       "org.kr1v.malilearning.client.MalilearningClient"
-    ],
-    "main": [
-      "org.kr1v.malilearning.Malilearning"
     ]
   },
   "depends": {
