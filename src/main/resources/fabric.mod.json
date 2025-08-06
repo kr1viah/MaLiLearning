@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "malilearning",
+  "version": "${version}",
+  "name": "MaLiLearning",
+  "description": "Adds a ghost block command",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/malilearning/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "org.kr1v.malilearning.client.MalilearningClient"
+    ],
+    "main": [
+      "org.kr1v.malilearning.Malilearning"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
