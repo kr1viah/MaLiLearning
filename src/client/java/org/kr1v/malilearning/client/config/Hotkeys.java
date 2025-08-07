@@ -4,6 +4,7 @@ import fi.dy.masa.malilib.config.options.ConfigHotkey;
 
 import java.util.List;
 
+// this doesn't need to be its own file
 public class Hotkeys {
 	public static final ConfigHotkey HOTKEY_A = new ConfigHotkey("hotkeyA", "", "Hotkey A comment");
 

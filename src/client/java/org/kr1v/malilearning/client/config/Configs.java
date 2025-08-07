@@ -38,8 +38,8 @@ public class Configs implements IConfigHandler {
 	}
 
 	public static class Lists {
-		public static final ConfigStringList STRING_LIST_1 = new ConfigStringList("blockTypeBreakRestrictionBlackList", ImmutableList.of("minecraft:budding_amethyst"), "");
-		public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("blockTypeBreakRestrictionWhiteList", ImmutableList.of(), "");
+		public static final ConfigStringList STRING_LIST_1 = new ConfigStringList("String list 1", ImmutableList.of("Default values", "go here"), "");
+		public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("Another string list", ImmutableList.of(), "This one has a comment!");
 
 		public static final List<IConfigBase> OPTIONS = List.of(
 				STRING_LIST_1,
