@@ -12,6 +12,7 @@ import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.MessageOutputType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Pair;
 import org.kr1v.malilearning.client.MalilearningClient;
 import org.kr1v.malilearning.client.malilib.config.options.ConfigStringMap;
 
@@ -68,7 +69,7 @@ public class Configs implements IConfigHandler {
     public static class Lists {
         public static final ConfigStringList STRING_LIST_1 = new ConfigStringList("String list 1", ImmutableList.of("Default values", "go here"), "");
         public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("Another string list", ImmutableList.of(), "This one has a comment!");
-        public static final ConfigStringMap  STRING_MAP_1 = new ConfigStringMap("Custom string map!", ImmutableList.of(), "A comment", "Pretty name!", "translated.name");
+        public static final ConfigStringMap  STRING_MAP_1 = new ConfigStringMap("Custom string map!", ImmutableList.of(new Pair<>("default key", "default value")), "A comment", "", "");
 
         public static final List<IConfigBase> OPTIONS = List.of(
                 STRING_LIST_1,

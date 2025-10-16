@@ -92,7 +92,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         fieldValue.setText(initialValue.getRight());
 
         ButtonGeneric resetButton = this.createResetButton(resetX, y);
-        WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(fieldKey, resetButton, this.defaultValue);
+        WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(fieldKey, resetButton, this.defaultValue, this);
         WidgetStringMapEditEntry.ListenerResetConfig listenerReset = new WidgetStringMapEditEntry.ListenerResetConfig(resetButton, this);
 
 
@@ -105,13 +105,16 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         this.parent.addTextField(wrapper2);
         this.addButton(resetButton, listenerReset);
 
+        String key = textFieldKey.getTextField().getText();
+        String value = textFieldValue.getTextField().getText();
+        resetButton.setEnabled(!key.equals(defaultValue.getLeft()) && !value.equals(defaultValue.getRight()));
+
         return resetButton.getX() + resetButton.getWidth() + 4;
     }
 
     protected ButtonGeneric createResetButton(int x, int y) {
         String labelReset = StringUtils.translate("malilib.gui.button.reset.caps");
         ButtonGeneric resetButton = new ButtonGeneric(x, y, -1, 20, labelReset);
-        resetButton.setEnabled(true);
 
         return resetButton;
     }
@@ -219,16 +222,20 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
     public static class ChangeListenerTextField extends ConfigOptionChangeListenerTextField {
         protected final Pair<String, String> defaultValue;
+        private final WidgetStringMapEditEntry parent;
 
-        public ChangeListenerTextField(GuiTextFieldGeneric textField, ButtonBase buttonReset, Pair<String, String> defaultValue) {
+        public ChangeListenerTextField(GuiTextFieldGeneric textField, ButtonBase buttonReset, Pair<String, String> defaultValue, WidgetStringMapEditEntry parent) {
             super(null, textField, buttonReset);
 
+            this.parent = parent;
             this.defaultValue = defaultValue;
         }
 
         @Override
         public boolean onTextChange(GuiTextFieldGeneric textField) {
-            this.buttonReset.setEnabled(true);
+            String key = parent.textFieldKey.getTextField().getText();
+            String value = parent.textFieldValue.getTextField().getText();
+            this.buttonReset.setEnabled(!key.equals(defaultValue.getLeft()) && !value.equals(defaultValue.getRight()));
             return false;
         }
     }
@@ -246,7 +253,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
             this.parent.textFieldKey.getTextField().setText(this.parent.defaultValue.getLeft());
             this.parent.textFieldValue.getTextField().setText(this.parent.defaultValue.getRight());
-            this.buttonReset.setEnabled(true);
+            this.buttonReset.setEnabled(false);
         }
     }
 
