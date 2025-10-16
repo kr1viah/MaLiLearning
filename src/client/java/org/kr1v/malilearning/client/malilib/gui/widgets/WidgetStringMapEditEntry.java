@@ -10,6 +10,7 @@ import fi.dy.masa.malilib.gui.interfaces.IGuiIcon;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOptionBase;
 import fi.dy.masa.malilib.gui.wrappers.TextFieldWrapper;
 import fi.dy.masa.malilib.render.RenderUtils;
+import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Pair;
@@ -46,25 +47,25 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         int bOff = 18;
 
 //        if (!this.isDummy()) {
-            this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue);
+        this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
+        bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue);
 
-            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
+        this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
+        bx += bOff;
+
+        this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.REMOVE);
+        bx += bOff;
+
+        if (this.canBeMoved(true)) {
+            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_DOWN);
+        }
+
+        bx += bOff;
+
+        if (this.canBeMoved(false)) {
+            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_UP);
             bx += bOff;
-
-            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.REMOVE);
-            bx += bOff;
-
-            if (this.canBeMoved(true)) {
-                this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_DOWN);
-            }
-
-            bx += bOff;
-
-            if (this.canBeMoved(false)) {
-                this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_UP);
-                bx += bOff;
-            }
+        }
 //        } else {
 //            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
 //        }
@@ -88,7 +89,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         fieldValue.setMaxLength(this.maxTextfieldTextLength);
         fieldValue.setText(initialValue.getRight());
 
-        ButtonGeneric resetButton = this.createResetButton(resetX, y, fieldKey);
+        ButtonGeneric resetButton = this.createResetButton(resetX, y);
         WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(fieldKey, resetButton, this.defaultValue);
         WidgetStringMapEditEntry.ListenerResetConfig listenerReset = new WidgetStringMapEditEntry.ListenerResetConfig(resetButton, this);
 
@@ -105,7 +106,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         return resetButton.getX() + resetButton.getWidth() + 4;
     }
 
-    protected ButtonGeneric createResetButton(int x, int y, GuiTextFieldGeneric textField) {
+    protected ButtonGeneric createResetButton(int x, int y) {
         String labelReset = StringUtils.translate("malilib.gui.button.reset.caps");
         ButtonGeneric resetButton = new ButtonGeneric(x, y, -1, 20, labelReset);
         resetButton.setEnabled(true);
@@ -284,5 +285,69 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         public String getDisplayName() {
             return StringUtils.translate(this.hoverTextkey);
         }
+    }
+
+    @Override
+    public boolean hasPendingModifications() {
+        if (this.textFieldKey != null) {
+            return !this.textFieldKey.getTextField().getText().equals(this.lastAppliedValue);
+        }
+        if (this.textFieldValue != null) {
+            return !this.textFieldValue.getTextField().getText().equals(this.lastAppliedValue);
+        }
+
+        return false;
+    }
+
+    @Override
+    protected boolean onMouseClickedImpl(int mouseX, int mouseY, int mouseButton) {
+        if (super.onMouseClickedImpl(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
+
+        boolean ret = false;
+
+        if (this.textFieldKey != null) {
+            ret |= this.textFieldKey.getTextField().mouseClicked(mouseX, mouseY, mouseButton);
+        }
+        if (this.textFieldValue != null) {
+            ret |= this.textFieldValue.getTextField().mouseClicked(mouseX, mouseY, mouseButton);
+        }
+
+        return ret;
+    }
+
+    @Override
+    public boolean onKeyTypedImpl(int keyCode, int scanCode, int modifiers) {
+        if (this.textFieldKey != null && this.textFieldKey.isFocused()) {
+            if (keyCode == KeyCodes.KEY_ENTER) {
+                this.applyNewValueToConfig();
+                return true;
+            } else {
+                return this.textFieldKey.onKeyTyped(keyCode, scanCode, modifiers);
+            }
+        }
+        if (this.textFieldValue != null && this.textFieldValue.isFocused()) {
+            if (keyCode == KeyCodes.KEY_ENTER) {
+                this.applyNewValueToConfig();
+                return true;
+            } else {
+                return this.textFieldValue.onKeyTyped(keyCode, scanCode, modifiers);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    protected boolean onCharTypedImpl(char charIn, int modifiers) {
+        if (this.textFieldKey != null && this.textFieldKey.onCharTyped(charIn, modifiers)) {
+            return true;
+        }
+        if (this.textFieldValue != null && this.textFieldValue.onCharTyped(charIn, modifiers)) {
+            return true;
+        }
+
+        return super.onCharTypedImpl(charIn, modifiers);
     }
 }
