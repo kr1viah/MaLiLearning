@@ -28,7 +28,6 @@ public class WidgetListStringMapEdit extends WidgetListConfigOptionsBase<Pair<St
 
     @Override
     protected void reCreateListEntryWidgets() {
-        // Add a dummy entry that allows adding the first actual Pair<String, String> to the list
         if (this.listContents.isEmpty()) {
             this.listWidgets.clear();
             this.maxVisibleBrowserEntries = 1;
@@ -57,10 +56,4 @@ public class WidgetListStringMapEdit extends WidgetListConfigOptionsBase<Pair<St
                     listIndex, isOdd, new Pair<>("", ""), new Pair<>("", ""), this);
         }
     }
-
-    @Override
-    protected boolean getShouldSortList() {
-        return false;
-    }
-
 }

@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Debug(export = true, print = true)
+// magic!
 @Mixin(value = WidgetConfigOption.class, remap = false)
 public abstract class WidgetConfigOptionMixin {
     @Unique
@@ -64,7 +64,7 @@ public abstract class WidgetConfigOptionMixin {
     @Inject(method = "wasConfigModified", at = @At("MIXINEXTRAS:EXPRESSION"), cancellable = true)
     private void wasConfigModifiedStringMap(CallbackInfoReturnable<Boolean> cir, @Local IConfigBase config) {
         if (this.initialStringMap != null && config instanceof IConfigStringMap) {
-            cir.setReturnValue(this.initialStringMap.equals(((IConfigStringMap) config).getMap()) == false);
+            cir.setReturnValue(!this.initialStringMap.equals(((IConfigStringMap) config).getMap()));
         }
     }
 }

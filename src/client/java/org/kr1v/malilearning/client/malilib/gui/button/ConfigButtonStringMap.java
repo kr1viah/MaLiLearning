@@ -1,13 +1,10 @@
 package org.kr1v.malilearning.client.malilib.gui.button;
 
-import fi.dy.masa.malilib.config.IConfigStringList;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.gui.GuiStringListEdit;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.interfaces.IConfigGui;
 import fi.dy.masa.malilib.gui.interfaces.IDialogHandler;
 import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;

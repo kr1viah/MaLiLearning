@@ -15,6 +15,7 @@ import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
 import java.util.*;
 
 public class ConfigStringMap extends ConfigBase<ConfigStringMap> implements IConfigStringMap {
+    // Is this necessary?
     public static final Codec<ConfigStringMap> CODEC = RecordCodecBuilder.create(
             inst -> inst.group(
                     PrimitiveCodec.STRING.fieldOf("name").forGetter(ConfigBase::getName),

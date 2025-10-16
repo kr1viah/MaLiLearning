@@ -14,7 +14,6 @@ import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Pair;
-import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
 
 import java.util.List;
@@ -27,13 +26,12 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
     private TextFieldWrapper<? extends GuiTextFieldGeneric> textFieldKey;
     private TextFieldWrapper<? extends GuiTextFieldGeneric> textFieldValue;
 
-    @Nullable
     protected Pair<String, String> initialValue;
     private String lastAppliedVKey;
     private String lastAppliedVValue;
 
     public WidgetStringMapEditEntry(int x, int y, int width, int height,
-                                    int listIndex, boolean isOdd, @Nullable Pair<String, String> initialValue, Pair<String, String> defaultValue, WidgetListStringMapEdit parent) {
+                                    int listIndex, boolean isOdd, Pair<String, String> initialValue, Pair<String, String> defaultValue, WidgetListStringMapEdit parent) {
         super(x, y, width, height, parent, initialValue, listIndex);
 
         this.listIndex = listIndex;
