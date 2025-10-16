@@ -16,7 +16,6 @@ import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
 
-import javax.swing.*;
 import java.util.List;
 
 public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String, String>> {
@@ -48,7 +47,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
 //        if (!this.isDummy()) {
             this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue.getLeft());
+            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue);
 
             this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
             bx += bOff;
@@ -81,21 +80,24 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         this.addButton(button, listener);
     }
 
-    protected int addTextFields(int x, int y, int resetX, int configWidth, int configHeight, String initialValue) {
-        GuiTextFieldGeneric field = this.createTextField(x, y + 1, configWidth - 4, configHeight - 3);
-        field.setMaxLength(this.maxTextfieldTextLength);
-        field.setText(initialValue);
+    protected int addTextFields(int x, int y, int resetX, int configWidth, int configHeight, Pair<String, String> initialValue) {
+        GuiTextFieldGeneric fieldKey = this.createTextField(x, y + 1, configWidth / 2 - 4, configHeight - 3);
+        fieldKey.setMaxLength(this.maxTextfieldTextLength);
+        fieldKey.setText(initialValue.getLeft());
+        GuiTextFieldGeneric fieldValue = this.createTextField(x + configWidth / 2, y + 1, configWidth / 2 - 4, configHeight - 3);
+        fieldValue.setMaxLength(this.maxTextfieldTextLength);
+        fieldValue.setText(initialValue.getRight());
 
-        ButtonGeneric resetButton = this.createResetButton(resetX, y, field);
-        WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(field, resetButton, this.defaultValue);
+        ButtonGeneric resetButton = this.createResetButton(resetX, y, fieldKey);
+        WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(fieldKey, resetButton, this.defaultValue);
         WidgetStringMapEditEntry.ListenerResetConfig listenerReset = new WidgetStringMapEditEntry.ListenerResetConfig(resetButton, this);
 
 
-        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper = new TextFieldWrapper<>(field, listenerChange);
+        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper = new TextFieldWrapper<>(fieldKey, listenerChange);
         this.textFieldKey = wrapper;
         this.parent.addTextField(wrapper);
 
-        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper2 = new TextFieldWrapper<>(field, listenerChange);
+        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper2 = new TextFieldWrapper<>(fieldValue, listenerChange);
         this.textFieldValue = wrapper2;
         this.parent.addTextField(wrapper2);
         this.addButton(resetButton, listenerReset);
