@@ -57,4 +57,10 @@ public class WidgetListStringMapEdit extends WidgetListConfigOptionsBase<Pair<St
                     listIndex, isOdd, new Pair<>("", ""), new Pair<>("", ""), this);
         }
     }
+
+    @Override
+    protected boolean getShouldSortList() {
+        return false;
+    }
+
 }
