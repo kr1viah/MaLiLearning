@@ -32,7 +32,7 @@ public class GuiStringMapEdit extends GuiListBase<Pair<String, String>, WidgetSt
         this.config = config;
         this.configGui = configGui;
         this.dialogHandler = dialogHandler;
-        this.title = StringUtils.translate("malilib.gui.title.string_list_edit", config.getName());
+        this.title = "Edit string map for '" + config.getName() + "'";
 
         if (this.dialogHandler == null) {
             this.setParent(parent);
