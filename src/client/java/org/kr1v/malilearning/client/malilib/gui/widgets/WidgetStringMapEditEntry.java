@@ -13,6 +13,7 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Pair;
+import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
 
 import javax.swing.*;
@@ -23,15 +24,20 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
     protected final Pair<String, String> defaultValue;
     protected final int listIndex;
     protected final boolean isOdd;
+    private TextFieldWrapper<? extends GuiTextFieldGeneric> textFieldKey;
     private TextFieldWrapper<? extends GuiTextFieldGeneric> textFieldValue;
 
+    @Nullable
+    protected Pair<String, String> initialValue;
+
     public WidgetStringMapEditEntry(int x, int y, int width, int height,
-                                    int listIndex, boolean isOdd, Pair<String, String> initialValue, Pair<String, String> defaultValue, WidgetListStringMapEdit parent) {
+                                    int listIndex, boolean isOdd, @Nullable Pair<String, String> initialValue, Pair<String, String> defaultValue, WidgetListStringMapEdit parent) {
         super(x, y, width, height, parent, initialValue, listIndex);
 
         this.listIndex = listIndex;
         this.isOdd = isOdd;
         this.defaultValue = defaultValue;
+        this.initialValue = initialValue;
         this.parent = parent;
         int textFieldX = x + 20;
         int textFieldWidth = width - 160;
@@ -40,11 +46,9 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         int bx = textFieldX;
         int bOff = 18;
 
-        if (!this.isDummy()) {
-            this.addLabel(x + 2, y + 6, 10, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-            bx = this.addTextField(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue.getLeft());
-            this.addLabel(bx, y + 6, 10, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-            bx += this.addTextField(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue.getRight());
+//        if (!this.isDummy()) {
+            this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
+            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue.getLeft());
 
             this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
             bx += bOff;
@@ -62,9 +66,9 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
                 this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_UP);
                 bx += bOff;
             }
-        } else {
-            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
-        }
+//        } else {
+//            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
+//        }
     }
 
     protected boolean isDummy() {
@@ -77,7 +81,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         this.addButton(button, listener);
     }
 
-    protected int addTextField(int x, int y, int resetX, int configWidth, int configHeight, String initialValue) {
+    protected int addTextFields(int x, int y, int resetX, int configWidth, int configHeight, String initialValue) {
         GuiTextFieldGeneric field = this.createTextField(x, y + 1, configWidth - 4, configHeight - 3);
         field.setMaxLength(this.maxTextfieldTextLength);
         field.setText(initialValue);
@@ -86,7 +90,14 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         WidgetStringMapEditEntry.ChangeListenerTextField listenerChange = new WidgetStringMapEditEntry.ChangeListenerTextField(field, resetButton, this.defaultValue);
         WidgetStringMapEditEntry.ListenerResetConfig listenerReset = new WidgetStringMapEditEntry.ListenerResetConfig(resetButton, this);
 
-        this.addTextField(field, listenerChange);
+
+        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper = new TextFieldWrapper<>(field, listenerChange);
+        this.textFieldKey = wrapper;
+        this.parent.addTextField(wrapper);
+
+        TextFieldWrapper<? extends GuiTextFieldGeneric> wrapper2 = new TextFieldWrapper<>(field, listenerChange);
+        this.textFieldValue = wrapper2;
+        this.parent.addTextField(wrapper2);
         this.addButton(resetButton, listenerReset);
 
         return resetButton.getX() + resetButton.getWidth() + 4;
@@ -102,7 +113,9 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
     @Override
     public boolean wasConfigModified() {
-        return !this.isDummy() && !this.textField.getTextField().getText().equals(this.initialStringValue);
+        return !this.isDummy() &&
+                !this.textFieldKey.getTextField().getText().equals(this.initialValue.getLeft()) &&
+                !this.textFieldValue.getTextField().getText().equals(this.initialValue.getRight());
     }
 
     @Override
@@ -110,7 +123,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         if (!this.isDummy()) {
             IConfigStringMap config = this.parent.getConfig();
             List<Pair<String, String>> list = config.getMap();
-            String key = this.textField.getTextField().getText();
+            String key = this.textFieldKey.getTextField().getText();
             String value = this.textFieldValue.getTextField().getText();
 
             if (list.size() > this.listIndex) {
@@ -188,7 +201,9 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         }
 
         this.drawSubWidgets(drawContext, mouseX, mouseY);
-        this.drawTextFields(drawContext, mouseX, mouseY);
+
+        this.textFieldValue.getTextField().render(drawContext, mouseX, mouseY, 0f);
+        this.textFieldKey.getTextField().render(drawContext, mouseX, mouseY, 0f);
         super.render(drawContext, mouseX, mouseY, selected);
     }
 
@@ -219,7 +234,7 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
         @Override
         public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            this.parent.textField.getTextField().setText(this.parent.defaultValue.getLeft());
+            this.parent.textFieldKey.getTextField().setText(this.parent.defaultValue.getLeft());
             this.parent.textFieldValue.getTextField().setText(this.parent.defaultValue.getRight());
             this.buttonReset.setEnabled(true);
         }

@@ -8,6 +8,12 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/malilearning/icon.png",
+  "mixins": [
+    {
+      "config": "malilearning.client.mixins.json",
+      "environment": "client"
+    }
+  ],
   "environment": "client",
   "entrypoints": {
     "client": [
