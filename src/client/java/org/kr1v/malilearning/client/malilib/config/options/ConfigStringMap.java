@@ -10,7 +10,6 @@ import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.config.options.ConfigBase;
 import net.minecraft.util.Pair;
 import net.minecraft.util.dynamic.Codecs;
-import org.kr1v.malilearning.client.malilib.CustomConfigType;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
 
 import java.util.*;
@@ -57,7 +56,7 @@ public class ConfigStringMap extends ConfigBase<ConfigStringMap> implements ICon
     private final List<Pair<String, String>> map = new ArrayList<>();
 
     public ConfigStringMap(String name, ImmutableList<Pair<String, String>> defaultValue, String comment, String prettyName, String translatedName) {
-        super(CustomConfigType.STRING_MAP, name, comment, prettyName, translatedName);
+        super(null, name, comment, prettyName, translatedName);
 
         this.defaultMap = defaultValue;
         this.map.addAll(defaultValue);

@@ -4,18 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
-import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigResettable;
 import fi.dy.masa.malilib.config.IConfigStringList;
+import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOption;
 import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptionsBase;
 import net.minecraft.util.Pair;
-import org.kr1v.malilearning.client.malilib.CustomConfigType;
 import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
+import org.kr1v.malilearning.client.malilib.config.options.ConfigStringMap;
 import org.kr1v.malilearning.client.malilib.gui.button.ConfigButtonStringMap;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,12 +46,12 @@ public abstract class WidgetConfigOptionMixin {
         }
     }
 
-    @Definition(id = "type", local = @Local(type = ConfigType.class))
-    @Definition(id = "STRING_LIST", field = "Lfi/dy/masa/malilib/config/ConfigType;STRING_LIST:Lfi/dy/masa/malilib/config/ConfigType;")
-    @Expression("type == STRING_LIST")
+    @Definition(id = "config", local = @Local(type = IConfigBase.class, argsOnly = true))
+    @Definition(id = "ConfigBooleanHotkeyed", type = ConfigBooleanHotkeyed.class)
+    @Expression("config instanceof ConfigBooleanHotkeyed")
     @Inject(method = "addConfigOption", at = @At("MIXINEXTRAS:EXPRESSION"), cancellable = true)
     private void addConfigOptionStringMap(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci, @Local(name = "configHeight") int configHeight) {
-        if (config.getType() == CustomConfigType.STRING_MAP) {
+        if (config instanceof ConfigStringMap) {
             ConfigButtonStringMap optionButton = new ConfigButtonStringMap(x, y, configWidth, configHeight, (IConfigStringMap) config, this.host, this.host.getDialogHandler());
             this.addConfigButtonEntry(x + configWidth + 2, y, (IConfigResettable) config, optionButton);
             ci.cancel();

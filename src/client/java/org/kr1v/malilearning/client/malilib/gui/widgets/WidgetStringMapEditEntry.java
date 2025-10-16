@@ -29,6 +29,8 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
     @Nullable
     protected Pair<String, String> initialValue;
+    private String lastAppliedVKey;
+    private String lastAppliedVValue;
 
     public WidgetStringMapEditEntry(int x, int y, int width, int height,
                                     int listIndex, boolean isOdd, @Nullable Pair<String, String> initialValue, Pair<String, String> defaultValue, WidgetListStringMapEdit parent) {
@@ -131,6 +133,9 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
             if (list.size() > this.listIndex) {
                 list.set(this.listIndex, new Pair<>(key, value));
+
+                lastAppliedVKey = key;
+                lastAppliedVValue = value;
                 config.setModified();
             }
         }
@@ -289,13 +294,10 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
     @Override
     public boolean hasPendingModifications() {
-        if (this.textFieldKey != null) {
-            return !this.textFieldKey.getTextField().getText().equals(this.lastAppliedValue);
+        if (this.textFieldKey != null && this.textFieldValue != null) {
+            return !this.textFieldKey.getTextField().getText().equals(this.lastAppliedVKey) &&
+                    !this.textFieldValue.getTextField().getText().equals(this.lastAppliedVValue);
         }
-        if (this.textFieldValue != null) {
-            return !this.textFieldValue.getTextField().getText().equals(this.lastAppliedValue);
-        }
-
         return false;
     }
 

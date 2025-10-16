@@ -18,9 +18,6 @@
   "entrypoints": {
     "client": [
       "org.kr1v.malilearning.client.MalilearningClient"
-    ],
-    "mm:early_risers": [
-      "org.kr1v.malilearning.client.malilib.ConfigTypeAdder"
     ]
   },
   "depends": {
