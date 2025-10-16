@@ -46,8 +46,8 @@ public class ConfigButtonStringMap extends ButtonGeneric {
         sb.append("{");
         boolean addDivider = false;
         for (Pair<String, String> entry : this.config.getMap()) {
-            String value = entry.getLeft();
-            String key = entry.getRight();
+            String key = entry.getLeft();
+            String value = entry.getRight();
             if (addDivider) {
                 sb.append(", ");
             }
