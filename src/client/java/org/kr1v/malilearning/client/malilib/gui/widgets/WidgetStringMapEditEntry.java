@@ -48,29 +48,29 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
         int bx = textFieldX;
         int bOff = 18;
 
-//        if (!this.isDummy()) {
-        this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-        bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue);
+        if (!this.isDummy()) {
+            this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
+            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue);
 
-        this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
-        bx += bOff;
-
-        this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.REMOVE);
-        bx += bOff;
-
-        if (this.canBeMoved(true)) {
-            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_DOWN);
-        }
-
-        bx += bOff;
-
-        if (this.canBeMoved(false)) {
-            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_UP);
+            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
             bx += bOff;
+
+            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.REMOVE);
+            bx += bOff;
+
+            if (this.canBeMoved(true)) {
+                this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_DOWN);
+            }
+
+            bx += bOff;
+
+            if (this.canBeMoved(false)) {
+                this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.MOVE_UP);
+                bx += bOff;
+            }
+        } else {
+            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
         }
-//        } else {
-//            this.addListActionButton(bx, by, WidgetStringMapEditEntry.ButtonType.ADD);
-//        }
     }
 
     protected boolean isDummy() {
@@ -210,8 +210,10 @@ public class WidgetStringMapEditEntry extends WidgetConfigOptionBase<Pair<String
 
         this.drawSubWidgets(drawContext, mouseX, mouseY);
 
-        this.textFieldValue.getTextField().render(drawContext, mouseX, mouseY, 0f);
-        this.textFieldKey.getTextField().render(drawContext, mouseX, mouseY, 0f);
+        if (textFieldKey != null && textFieldValue != null) {
+            this.textFieldKey.getTextField().render(drawContext, mouseX, mouseY, 0f);
+            this.textFieldValue.getTextField().render(drawContext, mouseX, mouseY, 0f);
+        }
         super.render(drawContext, mouseX, mouseY, selected);
     }
 
