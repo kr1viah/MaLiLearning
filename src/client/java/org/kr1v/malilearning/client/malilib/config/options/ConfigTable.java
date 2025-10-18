@@ -59,9 +59,11 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     private final List<List<Object>> table = new ArrayList<>();
     private final @Nullable String displayString;
     private final ImmutableList<Class<?>> types;
+    private final List<String> labels;
 
-    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, List<List<Object>> defaultValue, Class<?>... types) {
-        super(checkDefaultValue(defaultValue, types), name, comment, prettyName, translatedName);
+    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, List<List<Object>> defaultValue, List<String> labels, Class<?>... types) {
+        super(checkDefaultValue(defaultValue, types, labels), name, comment, prettyName, translatedName);
+        this.labels = labels;
 
         ImmutableList.Builder<Class<?>> ilb = ImmutableList.builder();
         for (Class<?> type : types) {
@@ -78,14 +80,13 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
         this.table.addAll(defaultTable);
     }
 
-    private static ConfigType checkDefaultValue(List<List<Object>> defaultValue, Object[] types) {
-        for (int i = 0; i < defaultValue.size(); i++) {
-            List<Object> v = defaultValue.get(i);
-            if (!(types[i] == String.class || types[i] == Double.class || types[i] == Integer.class)) {
-                throw new IllegalArgumentException("Invalid type: " + types[i]);
-            }
+    private static ConfigType checkDefaultValue(List<List<Object>> defaultValue, Object[] types, List<String> labels) {
+        if (labels.size() != types.length) {
+            throw new IllegalArgumentException("Labels size mismatch: expected " + types.length + " but got " + labels.size());
+        }
+        for (List<Object> v : defaultValue) {
             for (int j = 0; j < types.length; j++) {
-                if (v.get(j).getClass() != types[j]) {
+                if (v.get(j).getClass() != types[j] || (types[j] != Integer.class && types[j] != Double.class && types[j] != String.class)) {
                     throw new IllegalArgumentException("Type mismatch: expected " + types[j] + " but got " + v.get(j).getClass());
                 }
             }
@@ -198,5 +199,10 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
         }
 
         return tableArr;
+    }
+
+    @Override
+    public List<String> getLabels() {
+        return labels;
     }
 }

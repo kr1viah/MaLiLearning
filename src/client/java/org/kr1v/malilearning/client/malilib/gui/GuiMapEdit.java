@@ -16,6 +16,9 @@ import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetTableEditEntry;
 
 import java.util.List;
 
+// TODO: optional adding/removing entries
+//       ^ for this one also make the dialog height dynamic based on number of entries
+//       optional display of entry number
 public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
     protected final IConfigTable config;
     protected final IConfigGui configGui;
@@ -74,12 +77,12 @@ public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, 
 
     @Override
     protected int getBrowserHeight() {
-        return this.dialogHeight - 30;
+        return this.dialogHeight - 40;
     }
 
     @Override
     protected WidgetListTableEdit createListWidget(int listX, int listY) {
-        return new WidgetListTableEdit(this.dialogLeft + 10, this.dialogTop + 20, this.getBrowserWidth(), this.getBrowserHeight(), this.dialogWidth - 100, this);
+        return new WidgetListTableEdit(this.dialogLeft + 10, this.dialogTop + 30, this.getBrowserWidth(), this.getBrowserHeight(), this.dialogWidth - 100, this);
     }
 
     @Override
@@ -109,6 +112,10 @@ public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, 
     @Override
     protected void drawTitle(DrawContext drawContext, int mouseX, int mouseY, float partialTicks) {
         this.drawStringWithShadow(drawContext, this.title, this.dialogLeft + 10, this.dialogTop + 6, COLOR_WHITE);
+        for (int i = 0; i < this.config.getLabels().size(); i++) {
+            String str = this.config.getLabels().get(i);
+            this.drawStringWithShadow(drawContext, str, dialogLeft + 33 + i * ((dialogWidth - 190) / this.config.getLabels().size()) + 2, this.dialogTop + 18, COLOR_WHITE);
+        }
     }
 
     @Override

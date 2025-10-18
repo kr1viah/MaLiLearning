@@ -18,4 +18,5 @@ public interface IConfigTable extends IConfigBase {
     @Nullable String getDisplayString();
 
     List<Class<?>> getTypes();
+    List<String> getLabels();
 }
