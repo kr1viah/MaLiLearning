@@ -51,13 +51,18 @@ public class ConfigButtonTable extends ButtonGeneric {
         sb.append("{");
         boolean addDivider = false;
         for (List<Object> entry : this.config.getTable()) {
-                if (addDivider) {
-                    sb.append("; ");
-                }
-                for (Object entryPart : entry) {
-                    sb.append(entryPart.toString());
+            if (addDivider) {
+                sb.append("; ");
+            }
+            boolean addDividerEntry = false;
+            for (Object entryPart : entry) {
+                if (addDividerEntry) {
                     sb.append(", ");
                 }
+                sb.append(entryPart.toString());
+                sb.append(", ");
+                addDividerEntry = true;
+            }
                 addDivider = true;
             }
             sb.append("}");
