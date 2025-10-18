@@ -12,7 +12,6 @@ import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.MessageOutputType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Pair;
 import org.kr1v.malilearning.client.MalilearningClient;
 import org.kr1v.malilearning.client.malilib.config.options.ConfigTable;
 
@@ -71,7 +70,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("Another string list", ImmutableList.of(), "This one has a comment!");
         public static final ConfigTable STRING_MAP_1 = new ConfigTable("Custom table!", "A comment", "", "", null, List.of(), String.class, String.class);
         public static final ConfigTable STRING_MAP_2 = new ConfigTable("Custom integer table!", "A comment", "", "", null, List.of(), Integer.class, Integer.class);
-        public static final ConfigTable STRING_MAP_3 = new ConfigTable("Custom string integer double table!", "A comment", "", "", null, List.of(), String.class, Integer.class, Double.class);
+        public static final ConfigTable STRING_MAP_3 = new ConfigTable("Custom string integer double table!", "A comment", "", "", null, List.of(List.of("default", 1, 0.0)), String.class, Integer.class, Double.class);
 
         public static final List<IConfigBase> OPTIONS = List.of(
                 STRING_LIST_1,

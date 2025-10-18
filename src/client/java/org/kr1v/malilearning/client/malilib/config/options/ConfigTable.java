@@ -84,9 +84,9 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
             if (!(types[i] == String.class || types[i] == Double.class || types[i] == Integer.class)) {
                 throw new IllegalArgumentException("Invalid type: " + types[i]);
             }
-            for (Object obj : v) {
-                if (obj.getClass() != types[i]) {
-                    throw new IllegalArgumentException("Type mismatch: expected " + types[i] + " but got " + obj.getClass());
+            for (int j = 0; j < types.length; j++) {
+                if (v.get(j).getClass() != types[j]) {
+                    throw new IllegalArgumentException("Type mismatch: expected " + types[j] + " but got " + v.get(j).getClass());
                 }
             }
         }
