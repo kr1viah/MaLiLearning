@@ -60,7 +60,6 @@ public class ConfigButtonTable extends ButtonGeneric {
                     sb.append(", ");
                 }
                 sb.append(entryPart.toString());
-                sb.append(", ");
                 addDividerEntry = true;
             }
                 addDivider = true;

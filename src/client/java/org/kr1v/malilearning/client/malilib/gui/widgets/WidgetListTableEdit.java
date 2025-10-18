@@ -49,7 +49,7 @@ public class WidgetListTableEdit extends WidgetListConfigOptionsBase<List<Object
         IConfigTable config = this.config;
 
         if (listIndex >= 0 && listIndex < config.getTable().size()) {
-            List<Object> defaultValue = config.getDefaultTable().size() > listIndex ? config.getDefaultTable().get(listIndex) : getDummy(config);
+            List<Object> defaultValue = listIndex < config.getDefaultTable().size() ? config.getDefaultTable().get(listIndex) : getDummy(config);
 
             return new WidgetTableEditEntry(x, y, this.browserEntryWidth, this.browserEntryHeight,
                     listIndex, isOdd, config.getTable().get(listIndex), defaultValue, this, config.getTypes());

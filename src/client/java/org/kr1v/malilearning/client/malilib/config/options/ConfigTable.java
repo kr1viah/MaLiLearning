@@ -156,10 +156,10 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
                             tempList.add(el2.getAsString());
                         } else if (el2.getAsJsonPrimitive().isNumber()) {
                             Number num = el2.getAsNumber();
-                            if (num instanceof Double) {
+                            try {
+                                tempList.add(Integer.valueOf(el2.getAsString()));
+                            } catch (Exception e) {
                                 tempList.add(num.doubleValue());
-                            } else if (num instanceof Integer) {
-                                tempList.add(num.intValue());
                             }
                         } else {
                             throw new Exception();

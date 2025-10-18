@@ -367,9 +367,6 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
 
     @Override
     public boolean hasPendingModifications() {
-        if (true) {
-            return true;
-        }
         for (int i = 0; i < this.textFields.size(); i++) {
             TextFieldWrapper<? extends GuiTextFieldGeneric> tfw = this.textFields.get(i);
             String text = tfw.getTextField().getText();
