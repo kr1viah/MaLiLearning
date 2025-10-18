@@ -183,23 +183,15 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     public JsonElement getAsJsonElement() {
         JsonArray tableArr = new JsonArray();
 
-        for (JsonElement entry : tableArr) {
+        for (var entry : table) {
             JsonArray entryArr = new JsonArray();
-
-            if (entry.isJsonArray()) {
-                for (JsonElement obj : entry.getAsJsonArray()) {
-                    if (obj.isJsonPrimitive()) {
-                        if (obj.getAsJsonPrimitive().isString()) {
-                            entryArr.add(obj.getAsString());
-                        } else if (obj.getAsJsonPrimitive().isNumber()) {
-                            Number num = obj.getAsNumber();
-                            if (num instanceof Double) {
-                                entryArr.add(num.doubleValue());
-                            } else if (num instanceof Integer) {
-                                entryArr.add(num.intValue());
-                            }
-                        }
-                    }
+            for (var obj : entry) {
+                if (obj instanceof String str) {
+                    entryArr.add(str);
+                } else if (obj instanceof Integer integer) {
+                    entryArr.add(integer);
+                } else if (obj instanceof Double dbl) {
+                    entryArr.add(dbl);
                 }
             }
             tableArr.add(entryArr);
