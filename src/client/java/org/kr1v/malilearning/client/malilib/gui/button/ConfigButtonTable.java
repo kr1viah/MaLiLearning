@@ -5,19 +5,18 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.interfaces.IConfigGui;
 import fi.dy.masa.malilib.gui.interfaces.IDialogHandler;
 import fi.dy.masa.malilib.util.GuiUtils;
+import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
-import org.kr1v.malilearning.client.malilib.config.IConfigTable;
-import org.kr1v.malilearning.client.malilib.gui.GuiMapEdit;
+import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
+import org.kr1v.malilearning.client.malilib.gui.GuiStringMapEdit;
 
-import java.util.List;
-
-public class ConfigButtonTable extends ButtonGeneric {
-    private final IConfigTable config;
+public class ConfigButtonStringMap extends ButtonGeneric {
+    private final IConfigStringMap config;
     private final IConfigGui configGui;
     @Nullable
     private final IDialogHandler dialogHandler;
 
-    public ConfigButtonTable(int x, int y, int width, int height, IConfigTable config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler) {
+    public ConfigButtonStringMap(int x, int y, int width, int height, IConfigStringMap config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler) {
         super(x, y, width, height, "");
 
         this.config = config;
@@ -32,9 +31,9 @@ public class ConfigButtonTable extends ButtonGeneric {
         super.onMouseClickedImpl(mouseX, mouseY, mouseButton);
 
         if (this.dialogHandler != null) {
-            this.dialogHandler.openDialog(new GuiMapEdit(this.config, this.configGui, this.dialogHandler, null));
+            this.dialogHandler.openDialog(new GuiStringMapEdit(this.config, this.configGui, this.dialogHandler, null));
         } else {
-            GuiBase.openGui(new GuiMapEdit(this.config, this.configGui, null, GuiUtils.getCurrentScreen()));
+            GuiBase.openGui(new GuiStringMapEdit(this.config, this.configGui, null, GuiUtils.getCurrentScreen()));
         }
 
         return true;
@@ -42,22 +41,17 @@ public class ConfigButtonTable extends ButtonGeneric {
 
     @Override
     public void updateDisplayString() {
-        if (this.config.getDisplayString() != null) {
-            this.displayString = this.config.getDisplayString();
-            return;
-        }
         StringBuilder sb = new StringBuilder();
 
         sb.append("{");
         boolean addDivider = false;
-        for (List<Object> entry : this.config.getTable()) {
+        for (Pair<String, String> entry : this.config.getMap()) {
+            String key = entry.getLeft();
+            String value = entry.getRight();
             if (addDivider) {
-                sb.append("; ");
-            }
-            for (Object entryPart : entry) {
-                sb.append(entryPart.toString());
                 sb.append(", ");
             }
+            sb.append(key).append("=").append(value);
             addDivider = true;
         }
         sb.append("}");
