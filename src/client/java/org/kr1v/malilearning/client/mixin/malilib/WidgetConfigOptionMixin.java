@@ -14,20 +14,22 @@ import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOption;
 import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptionsBase;
 import net.minecraft.util.Pair;
-import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
-import org.kr1v.malilearning.client.malilib.config.options.ConfigStringMap;
-import org.kr1v.malilearning.client.malilib.gui.button.ConfigButtonStringMap;
+import org.kr1v.malilearning.client.malilib.config.IConfigTable;
+import org.kr1v.malilearning.client.malilib.config.options.ConfigTable;
+import org.kr1v.malilearning.client.malilib.gui.button.ConfigButtonTable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 // magic!
 @Mixin(value = WidgetConfigOption.class, remap = false)
 public abstract class WidgetConfigOptionMixin {
     @Unique
-    protected ImmutableList<Pair<String, String>> initialStringMap;
+    protected ImmutableList<List<Object>> initialTable;
 
     @Shadow
     @Final
@@ -40,9 +42,9 @@ public abstract class WidgetConfigOptionMixin {
     @Definition(id = "IConfigStringList", type = IConfigStringList.class)
     @Expression("config instanceof IConfigStringList")
     @Inject(method = "<init>", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private void initStringMap(int x, int y, int width, int height, int labelWidth, int configWidth, GuiConfigsBase.ConfigOptionWrapper wrapper, int listIndex, IKeybindConfigGui host, WidgetListConfigOptionsBase<?, ?> parent, CallbackInfo ci, @Local IConfigBase config) {
-        if (config instanceof IConfigStringMap) {
-            this.initialStringMap = ImmutableList.copyOf(((IConfigStringMap) config).getMap());
+    private void initTable(int x, int y, int width, int height, int labelWidth, int configWidth, GuiConfigsBase.ConfigOptionWrapper wrapper, int listIndex, IKeybindConfigGui host, WidgetListConfigOptionsBase<?, ?> parent, CallbackInfo ci, @Local IConfigBase config) {
+        if (config instanceof IConfigTable) {
+            this.initialTable = ImmutableList.copyOf(((IConfigTable) config).getTable());
         }
     }
 
@@ -50,9 +52,9 @@ public abstract class WidgetConfigOptionMixin {
     @Definition(id = "ConfigBooleanHotkeyed", type = ConfigBooleanHotkeyed.class)
     @Expression("config instanceof ConfigBooleanHotkeyed")
     @Inject(method = "addConfigOption", at = @At("MIXINEXTRAS:EXPRESSION"), cancellable = true)
-    private void addConfigOptionStringMap(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci, @Local(name = "configHeight") int configHeight) {
-        if (config instanceof ConfigStringMap) {
-            ConfigButtonStringMap optionButton = new ConfigButtonStringMap(x, y, configWidth, configHeight, (IConfigStringMap) config, this.host, this.host.getDialogHandler());
+    private void addConfigOptionTable(int x, int y, float zLevel, int labelWidth, int configWidth, IConfigBase config, CallbackInfo ci, @Local(name = "configHeight") int configHeight) {
+        if (config instanceof ConfigTable) {
+            ConfigButtonTable optionButton = new ConfigButtonTable(x, y, configWidth, configHeight, (IConfigTable) config, this.host, this.host.getDialogHandler());
             this.addConfigButtonEntry(x + configWidth + 2, y, (IConfigResettable) config, optionButton);
             ci.cancel();
         }
@@ -62,9 +64,9 @@ public abstract class WidgetConfigOptionMixin {
     @Definition(id = "IConfigStringList", type = IConfigStringList.class)
     @Expression("config instanceof IConfigStringList")
     @Inject(method = "wasConfigModified", at = @At("MIXINEXTRAS:EXPRESSION"), cancellable = true)
-    private void wasConfigModifiedStringMap(CallbackInfoReturnable<Boolean> cir, @Local IConfigBase config) {
-        if (this.initialStringMap != null && config instanceof IConfigStringMap) {
-            cir.setReturnValue(!this.initialStringMap.equals(((IConfigStringMap) config).getMap()));
+    private void wasConfigModifiedTable(CallbackInfoReturnable<Boolean> cir, @Local IConfigBase config) {
+        if (this.initialTable != null && config instanceof IConfigTable) {
+            cir.setReturnValue(!this.initialTable.equals(((IConfigTable) config).getTable()));
         }
     }
 }

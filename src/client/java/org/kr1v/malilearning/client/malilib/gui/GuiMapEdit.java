@@ -9,14 +9,15 @@ import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.KeyCodes;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.Pair;
 import org.jetbrains.annotations.Nullable;
-import org.kr1v.malilearning.client.malilib.config.IConfigStringMap;
-import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetListStringMapEdit;
-import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetStringMapEditEntry;
+import org.kr1v.malilearning.client.malilib.config.IConfigTable;
+import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetListTableEdit;
+import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetTableEditEntry;
 
-public class GuiStringMapEdit extends GuiListBase<Pair<String, String>, WidgetStringMapEditEntry, WidgetListStringMapEdit> {
-    protected final IConfigStringMap config;
+import java.util.List;
+
+public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
+    protected final IConfigTable config;
     protected final IConfigGui configGui;
     protected int dialogWidth;
     protected int dialogHeight;
@@ -25,13 +26,13 @@ public class GuiStringMapEdit extends GuiListBase<Pair<String, String>, WidgetSt
     @Nullable
     protected final IDialogHandler dialogHandler;
 
-    public GuiStringMapEdit(IConfigStringMap config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler, Screen parent) {
+    public GuiMapEdit(IConfigTable config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler, Screen parent) {
         super(0, 0);
 
         this.config = config;
         this.configGui = configGui;
         this.dialogHandler = dialogHandler;
-        this.title = "Edit string map for '" + config.getName() + "'";
+        this.title = "Edit table for '" + config.getName() + "'";
 
         if (this.dialogHandler == null) {
             this.setParent(parent);
@@ -62,7 +63,7 @@ public class GuiStringMapEdit extends GuiListBase<Pair<String, String>, WidgetSt
         super.initGui();
     }
 
-    public IConfigStringMap getConfig() {
+    public IConfigTable getConfig() {
         return this.config;
     }
 
@@ -77,8 +78,8 @@ public class GuiStringMapEdit extends GuiListBase<Pair<String, String>, WidgetSt
     }
 
     @Override
-    protected WidgetListStringMapEdit createListWidget(int listX, int listY) {
-        return new WidgetListStringMapEdit(this.dialogLeft + 10, this.dialogTop + 20, this.getBrowserWidth(), this.getBrowserHeight(), this.dialogWidth - 100, this);
+    protected WidgetListTableEdit createListWidget(int listX, int listY) {
+        return new WidgetListTableEdit(this.dialogLeft + 10, this.dialogTop + 20, this.getBrowserWidth(), this.getBrowserHeight(), this.dialogWidth - 100, this);
     }
 
     @Override
