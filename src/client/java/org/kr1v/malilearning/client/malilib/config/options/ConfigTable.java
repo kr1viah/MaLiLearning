@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.options.ConfigBase;
+import fi.dy.masa.malilib.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
 
@@ -63,7 +64,45 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     private final boolean allowNewEntry;
     private final boolean showEntryNumbers;
 
-    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, List<List<Object>> defaultValue, List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
+    public ConfigTable(String name, Class<?>... types) {
+        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
+    }
+
+    public ConfigTable(String name, String comment, Class<?>... types) {
+        this(name, comment, StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
+    }
+    public ConfigTable(String name, String prettyName, String translatedName, Class<?>... types) {
+        this(name, name + " Comment?", prettyName, translatedName, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
+    }
+
+    public ConfigTable(String name, String comment, String prettyName, String translatedName, Class<?>... types) {
+        this(name, comment, prettyName, translatedName, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
+    }
+
+    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, Class<?>... types) {
+        this(name, comment, prettyName, translatedName, displayString, new ArrayList<>(), new ArrayList<>(), true, true, types);
+    }
+
+    public ConfigTable(String name, List<List<Object>> defaultValue, Class<?>... types) {
+        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, defaultValue, new ArrayList<>(), true, true, types);
+    }
+
+    public ConfigTable(String name, List<List<Object>> defaultValue, List<String> labels, Class<?>... types) {
+        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, defaultValue, labels, true, true, types);
+    }
+
+    public ConfigTable(String name, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
+        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), showEntryNumbers, allowAddNewEntry, types);
+    }
+
+    public ConfigTable(String name, String comment, List<List<Object>> defaultValue, List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
+        this(name, comment, StringUtils.splitCamelCase(name), name, null, defaultValue, labels, showEntryNumbers, allowAddNewEntry, types);
+    }
+
+    public ConfigTable(String name, String comment, String prettyName, String translatedName,
+                       @Nullable String displayString, List<List<Object>> defaultValue,
+                       List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry,
+                       Class<?>... types) {
         super(checkDefaultValue(defaultValue, types, labels), name, comment, prettyName, translatedName);
         this.labels = labels;
         this.allowNewEntry = allowAddNewEntry;

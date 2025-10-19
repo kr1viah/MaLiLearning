@@ -13,7 +13,6 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOption;
 import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptionsBase;
-import net.minecraft.util.Pair;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
 import org.kr1v.malilearning.client.malilib.config.options.ConfigTable;
 import org.kr1v.malilearning.client.malilib.gui.button.ConfigButtonTable;
