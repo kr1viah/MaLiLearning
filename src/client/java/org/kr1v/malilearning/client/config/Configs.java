@@ -68,10 +68,11 @@ public class Configs implements IConfigHandler {
     public static class Lists {
         public static final ConfigStringList STRING_LIST_1 = new ConfigStringList("String list 1", ImmutableList.of("Default values", "go here"), "");
         public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("Another string list", ImmutableList.of(), "This one has a comment!");
-        public static final ConfigTable STRING_MAP_3 = new ConfigTable("Custom string integer double table!", "A comment", "", "", null, List.of(List.of("default", 1, 0.0)), List.of("123", "sasadadasd", "21343ef"), true, true, String.class, Integer.class, Double.class);
-        public static final ConfigTable CURSED_TABLE = new ConfigTable("Cursed table", "", "", "", null, List.of(List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0), List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0)), List.of("awd", "dsa", "wad", "wwa", "mao", "mrp", "mew", "maw", "mow", "mrr", "mpr"), true, false, String.class, String.class, String.class, String.class, Double.class, String.class, Double.class, String.class, Double.class, String.class, Double.class);
-        public static final ConfigTable EMPTY_TABLE = new ConfigTable("Empty table", "An empty table for testing", "", "", null, List.of(List.of("1", "2"), List.of("2", "3")), List.of("Column 1", "Column 2"), false, false, String.class, String.class);
-        public static final ConfigTable PRETTY_TABLE = new ConfigTable("Pretty table", "A table with a display string", "", "", "This is a pretty table!", List.of(List.of("Apple", 1, 0.5), List.of("Banana", 2, 0.75)), List.of("Fruit", "Quantity", "Price"), false, true, String.class, Integer.class, Double.class);
+        public static final ConfigTable STRING_MAP_3 = new ConfigTable.Builder().setName("Custom string integer double table!").setComment("A comment").setDefaultValue(List.of(List.of("default", 1, 0.0))).setLabels(List.of("123", "sasadadasd", "21343ef")).setTypes(String.class, Integer.class, Double.class).build();
+        public static final ConfigTable CURSED_TABLE = new ConfigTable.Builder().setName("Cursed table").setComment("").setPrettyName("").setTranslatedName("").setLabels(List.of("awd", "dsa", "wad", "wwa", "mao", "mrp", "mew", "maw", "mow", "mrr", "mpr")).setAllowAddNewEntry(false).setTypes(String.class, String.class, String.class, String.class, Double.class, String.class, Double.class, String.class, Double.class, String.class, Double.class).build();
+        public static final ConfigTable EMPTY_TABLE = new ConfigTable.Builder().setName("Table").setComment("").setPrettyName("").setTranslatedName("").setLabels(List.of("Column 1", "Column 2")).setShowEntryNumbers(false).setAllowAddNewEntry(false).setTypes(String.class, String.class).build();
+        public static final ConfigTable PRETTY_TABLE = new ConfigTable.Builder().setName("Pretty table").setComment("").setPrettyName("").setTranslatedName("").setDisplayString("This is a pretty table!").setDefaultValue(List.of(List.of("Apple", 1, 0.5), List.of("Banana", 2, 0.75))).setLabels(List.of("Fruit", "Quantity", "Price")).setShowEntryNumbers(false).setTypes(String.class, Integer.class, Double.class).build();
+        public static final ConfigTable X_Y_Z = new ConfigTable.Builder().setName("X Y Z Table").setComment("").setLabels(List.of("X", "Y", "Z")).setShowEntryNumbers(false).setAllowAddNewEntry(false).setTypes(Integer.class, Integer.class, Integer.class).build();
 
         public static final List<IConfigBase> OPTIONS = List.of(
                 STRING_LIST_1,
@@ -79,6 +80,7 @@ public class Configs implements IConfigHandler {
                 STRING_MAP_3,
                 CURSED_TABLE,
                 EMPTY_TABLE,
+                X_Y_Z,
                 PRETTY_TABLE
         );
     }

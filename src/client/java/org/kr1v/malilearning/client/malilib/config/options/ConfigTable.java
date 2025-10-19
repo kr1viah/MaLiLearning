@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import fi.dy.masa.malilib.MaLiLib;
-import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.options.ConfigBase;
-import fi.dy.masa.malilib.util.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
 
@@ -64,46 +63,11 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     private final boolean allowNewEntry;
     private final boolean showEntryNumbers;
 
-    public ConfigTable(String name, Class<?>... types) {
-        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
-    }
-
-    public ConfigTable(String name, String comment, Class<?>... types) {
-        this(name, comment, StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
-    }
-    public ConfigTable(String name, String prettyName, String translatedName, Class<?>... types) {
-        this(name, name + " Comment?", prettyName, translatedName, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
-    }
-
-    public ConfigTable(String name, String comment, String prettyName, String translatedName, Class<?>... types) {
-        this(name, comment, prettyName, translatedName, null, new ArrayList<>(), new ArrayList<>(), true, true, types);
-    }
-
-    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, Class<?>... types) {
-        this(name, comment, prettyName, translatedName, displayString, new ArrayList<>(), new ArrayList<>(), true, true, types);
-    }
-
-    public ConfigTable(String name, List<List<Object>> defaultValue, Class<?>... types) {
-        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, defaultValue, new ArrayList<>(), true, true, types);
-    }
-
-    public ConfigTable(String name, List<List<Object>> defaultValue, List<String> labels, Class<?>... types) {
-        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, defaultValue, labels, true, true, types);
-    }
-
-    public ConfigTable(String name, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
-        this(name, name + " Comment?", StringUtils.splitCamelCase(name), name, null, new ArrayList<>(), new ArrayList<>(), showEntryNumbers, allowAddNewEntry, types);
-    }
-
-    public ConfigTable(String name, String comment, List<List<Object>> defaultValue, List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
-        this(name, comment, StringUtils.splitCamelCase(name), name, null, defaultValue, labels, showEntryNumbers, allowAddNewEntry, types);
-    }
-
     public ConfigTable(String name, String comment, String prettyName, String translatedName,
                        @Nullable String displayString, List<List<Object>> defaultValue,
                        List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry,
                        Class<?>... types) {
-        super(checkDefaultValue(defaultValue, types, labels), name, comment, prettyName, translatedName);
+        super(null, name, comment, prettyName, translatedName);
         this.labels = labels;
         this.allowNewEntry = allowAddNewEntry;
         this.showEntryNumbers = showEntryNumbers;
@@ -121,20 +85,6 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
         }
         this.defaultTable = ilb2.build();
         this.table.addAll(defaultTable);
-    }
-
-    private static ConfigType checkDefaultValue(List<List<Object>> defaultValue, Object[] types, List<String> labels) {
-        if (labels.size() != types.length) {
-            throw new IllegalArgumentException("Labels size mismatch: expected " + types.length + " but got " + labels.size());
-        }
-        for (List<Object> v : defaultValue) {
-            for (int j = 0; j < types.length; j++) {
-                if (v.get(j).getClass() != types[j] || (types[j] != Integer.class && types[j] != Double.class && types[j] != String.class)) {
-                    throw new IllegalArgumentException("Type mismatch: expected " + types[j] + " but got " + v.get(j).getClass());
-                }
-            }
-        }
-        return null;
     }
 
     @Override
@@ -257,5 +207,106 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     @Override
     public boolean showEntryNumbers() {
         return showEntryNumbers;
+    }
+
+    public static class Builder {
+        private static @NotNull List<Object> getDummy(List<Class<?>> types) {
+            List<Object> dummy = new ArrayList<>();
+            for (Class<?> type : types) {
+                if (type == String.class) {
+                    dummy.add("");
+                } else if (type == Integer.class) {
+                    dummy.add(0);
+                } else if (type == Double.class) {
+                    dummy.add(0.0);
+                } else {
+                    throw new IllegalStateException("Unsupported type: " + type.getName());
+                }
+            }
+            return dummy;
+        }
+
+        private String name;
+        private String comment = null;
+        private String prettyName = null;
+        private String translatedName = null;
+        private @Nullable String displayString = null;
+        private List<List<Object>> defaultValue = null;
+        private List<String> labels = List.of();
+        private boolean showEntryNumbers = true;
+        private boolean allowAddNewEntry = true;
+        private Class<?>[] types;
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setComment(String comment) {
+            this.comment = comment;
+            return this;
+        }
+
+        public Builder setPrettyName(String prettyName) {
+            this.prettyName = prettyName;
+            return this;
+        }
+
+        public Builder setTranslatedName(String translatedName) {
+            this.translatedName = translatedName;
+            return this;
+        }
+
+        public Builder setDisplayString(@Nullable String displayString) {
+            this.displayString = displayString;
+            return this;
+        }
+
+        public Builder setDefaultValue(List<List<Object>> defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder setLabels(List<String> labels) {
+            this.labels = labels;
+            return this;
+        }
+
+        public Builder setShowEntryNumbers(boolean showEntryNumbers) {
+            this.showEntryNumbers = showEntryNumbers;
+            return this;
+        }
+
+        public Builder setAllowAddNewEntry(boolean allowAddNewEntry) {
+            this.allowAddNewEntry = allowAddNewEntry;
+            return this;
+        }
+
+        public Builder setTypes(Class<?>... types) {
+            this.types = types;
+            return this;
+        }
+
+        public ConfigTable build() {
+            defaultValue = new ArrayList<>();
+            defaultValue.add(getDummy(List.of(types)));
+            if (comment == null) comment = name + " Comment?";
+            if (prettyName == null) prettyName = name;
+            if (translatedName == null) translatedName = name;
+
+
+            if (labels.size() != types.length) {
+                throw new IllegalArgumentException("Labels size mismatch: expected " + types.length + " but got " + labels.size());
+            }
+            for (List<Object> v : defaultValue) {
+                for (int j = 0; j < types.length; j++) {
+                    if (v.get(j).getClass() != types[j] || (types[j] != Integer.class && types[j] != Double.class && types[j] != String.class)) {
+                        throw new IllegalArgumentException("Type mismatch: expected " + types[j] + " but got " + v.get(j).getClass());
+                    }
+                }
+            }
+
+            return new ConfigTable(name, comment, prettyName, translatedName, displayString, defaultValue, labels, showEntryNumbers, allowAddNewEntry, types);
+        }
     }
 }
