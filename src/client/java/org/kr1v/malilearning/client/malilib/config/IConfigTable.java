@@ -19,4 +19,6 @@ public interface IConfigTable extends IConfigBase {
 
     List<Class<?>> getTypes();
     List<String> getLabels();
+    boolean allowNewEntry();
+    boolean showEntryNumbers();
 }

@@ -34,7 +34,8 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
     private final List<String> lastAppliedValues = new ArrayList<>();
 
     public WidgetTableEditEntry(int x, int y, int width, int height,
-                                int listIndex, boolean isOdd, List<Object> initialValue, List<Object> defaultValue, WidgetListTableEdit parent, List<Class<?>> types) {
+                                int listIndex, boolean isOdd, List<Object> initialValue, List<Object> defaultValue,
+                                WidgetListTableEdit parent, List<Class<?>> types) {
         super(x, y, width, height, parent, initialValue, listIndex);
 
         this.listIndex = listIndex;
@@ -44,34 +45,34 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
         this.parent = parent;
         this.types = types;
         int textFieldX = x + 20;
-        int textFieldWidth = width - 160;
-        int resetX = textFieldX + textFieldWidth + 2;
         int by = y + 4;
-        int bx = textFieldX;
         int bOff = 18;
 
         if (!this.isDummy()) {
             this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
-            bx = this.addTextFields(textFieldX, y + 1, resetX, textFieldWidth, 20, initialValue, types);
+            int offset = 0;
+            int bx = x + width - 20;
+            if (this.parent.getConfig().allowNewEntry()) {
+                this.addListActionButton(bx - offset, by, WidgetTableEditEntry.ButtonType.ADD);
+                offset += bOff;
 
-            this.addListActionButton(bx, by, WidgetTableEditEntry.ButtonType.ADD);
-            bx += bOff;
-
-            this.addListActionButton(bx, by, WidgetTableEditEntry.ButtonType.REMOVE);
-            bx += bOff;
+                this.addListActionButton(bx - offset, by, WidgetTableEditEntry.ButtonType.REMOVE);
+                offset += bOff;
+            }
 
             if (this.canBeMoved(true)) {
-                this.addListActionButton(bx, by, WidgetTableEditEntry.ButtonType.MOVE_DOWN);
+                this.addListActionButton(bx - offset, by, WidgetTableEditEntry.ButtonType.MOVE_DOWN);
             }
 
-            bx += bOff;
+            offset += bOff;
 
             if (this.canBeMoved(false)) {
-                this.addListActionButton(bx, by, WidgetTableEditEntry.ButtonType.MOVE_UP);
-                bx += bOff;
+                this.addListActionButton(bx - offset, by, WidgetTableEditEntry.ButtonType.MOVE_UP);
             }
+            offset += bOff;
+            bx = this.addTextFields(textFieldX, y + 1, bx - offset + 10, width - offset, 20, initialValue, types);
         } else {
-            this.addListActionButton(bx, by, WidgetTableEditEntry.ButtonType.ADD);
+            this.addListActionButton(textFieldX, by, WidgetTableEditEntry.ButtonType.ADD);
         }
     }
 
@@ -108,6 +109,8 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
 
         boolean resetEnabled = false;
 
+        configWidth -= 2 * (resetButton.getWidth()) - 10;
+
         for (int i = 0; i < types.size(); i++) {
             Class<?> type = types.get(i);
             Object value = initialValue.get(i);
@@ -142,6 +145,7 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
         String labelReset = StringUtils.translate("malilib.gui.button.reset.caps");
         ButtonGeneric resetButton = new ButtonGeneric(x, y, -1, 20, labelReset);
 
+        resetButton.setX(x - resetButton.getWidth());
         return resetButton;
     }
 

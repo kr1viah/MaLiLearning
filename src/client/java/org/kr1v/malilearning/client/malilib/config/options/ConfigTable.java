@@ -60,10 +60,14 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     private final @Nullable String displayString;
     private final ImmutableList<Class<?>> types;
     private final List<String> labels;
+    private final boolean allowNewEntry;
+    private final boolean showEntryNumbers;
 
-    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, List<List<Object>> defaultValue, List<String> labels, Class<?>... types) {
+    public ConfigTable(String name, String comment, String prettyName, String translatedName, @Nullable String displayString, List<List<Object>> defaultValue, List<String> labels, boolean showEntryNumbers, boolean allowAddNewEntry, Class<?>... types) {
         super(checkDefaultValue(defaultValue, types, labels), name, comment, prettyName, translatedName);
         this.labels = labels;
+        this.allowNewEntry = allowAddNewEntry;
+        this.showEntryNumbers = showEntryNumbers;
 
         ImmutableList.Builder<Class<?>> ilb = ImmutableList.builder();
         for (Class<?> type : types) {
@@ -204,5 +208,15 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     @Override
     public List<String> getLabels() {
         return labels;
+    }
+
+    @Override
+    public boolean allowNewEntry() {
+        return allowNewEntry;
+    }
+
+    @Override
+    public boolean showEntryNumbers() {
+        return showEntryNumbers;
     }
 }

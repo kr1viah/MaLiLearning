@@ -16,9 +16,7 @@ import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetTableEditEntry;
 
 import java.util.List;
 
-// TODO: optional adding/removing entries
-//       ^ for this one also make the dialog height dynamic based on number of entries
-//       optional display of entry number
+//       TODO: optional display of entry number
 public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
     protected final IConfigTable config;
     protected final IConfigGui configGui;
