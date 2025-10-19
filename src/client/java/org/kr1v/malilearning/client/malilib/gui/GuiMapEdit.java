@@ -16,7 +16,6 @@ import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetTableEditEntry;
 
 import java.util.List;
 
-//       TODO: optional display of entry number
 public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
     protected final IConfigTable config;
     protected final IConfigGui configGui;
@@ -112,7 +111,18 @@ public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, 
         this.drawStringWithShadow(drawContext, this.title, this.dialogLeft + 10, this.dialogTop + 6, COLOR_WHITE);
         for (int i = 0; i < this.config.getLabels().size(); i++) {
             String str = this.config.getLabels().get(i);
-            this.drawStringWithShadow(drawContext, str, dialogLeft + 33 + i * ((dialogWidth - 190) / this.config.getLabels().size()) + 2, this.dialogTop + 18, COLOR_WHITE);
+
+            int x = dialogLeft + 18;
+            if (this.config.showEntryNumbers()) {
+                x += 15;
+            }
+            if (this.config.allowNewEntry()) {
+                x = x + i * ((dialogWidth - 170) / this.config.getTypes().size()) + 2;
+            } else {
+                x = x + i * ((dialogWidth - 130) / this.config.getTypes().size()) + 2;
+            }
+
+            this.drawStringWithShadow(drawContext, str, x, this.dialogTop + 25, COLOR_WHITE);
         }
     }
 

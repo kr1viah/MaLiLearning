@@ -44,14 +44,18 @@ public class WidgetTableEditEntry extends WidgetConfigOptionBase<List<Object>> {
         this.initialValue = initialValue;
         this.parent = parent;
         this.types = types;
-        int textFieldX = x + 20;
+        int textFieldX = x + 5;
         int by = y + 4;
         int bOff = 18;
 
         if (!this.isDummy()) {
-            this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
             int offset = 0;
-            int bx = x + width - 20;
+            int bx = x + width - 30;
+            if (this.parent.config.showEntryNumbers()) {
+                this.addLabel(x + 2, y + 6, 20, 12, 0xC0C0C0C0, String.format("%3d:", listIndex + 1));
+                textFieldX += 15;
+            }
+
             if (this.parent.getConfig().allowNewEntry()) {
                 this.addListActionButton(bx - offset, by, WidgetTableEditEntry.ButtonType.ADD);
                 offset += bOff;

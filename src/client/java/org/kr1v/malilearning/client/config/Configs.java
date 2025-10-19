@@ -69,13 +69,17 @@ public class Configs implements IConfigHandler {
         public static final ConfigStringList STRING_LIST_1 = new ConfigStringList("String list 1", ImmutableList.of("Default values", "go here"), "");
         public static final ConfigStringList STRING_LIST_2 = new ConfigStringList("Another string list", ImmutableList.of(), "This one has a comment!");
         public static final ConfigTable STRING_MAP_3 = new ConfigTable("Custom string integer double table!", "A comment", "", "", null, List.of(List.of("default", 1, 0.0)), List.of("123", "sasadadasd", "21343ef"), true, true, String.class, Integer.class, Double.class);
-        public static final ConfigTable CURSED_TABLE = new ConfigTable("Cursed table", "This table has mixed types in the same column", "", "", null, List.of(List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0), List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0)), List.of("awd", "dsa", "wad", "wwa", "mao", "mrp", "mew", "maw", "mow", "mrr", "mpr"), true, false, String.class, String.class, String.class, String.class, Double.class, String.class, Double.class, String.class, Double.class, String.class, Double.class);
+        public static final ConfigTable CURSED_TABLE = new ConfigTable("Cursed table", "", "", "", null, List.of(List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0), List.of("", "", "", "", 1.0, "", 1.0, "", 1.0, "", 1.0)), List.of("awd", "dsa", "wad", "wwa", "mao", "mrp", "mew", "maw", "mow", "mrr", "mpr"), true, false, String.class, String.class, String.class, String.class, Double.class, String.class, Double.class, String.class, Double.class, String.class, Double.class);
+        public static final ConfigTable EMPTY_TABLE = new ConfigTable("Empty table", "An empty table for testing", "", "", null, List.of(List.of("1", "2"), List.of("2", "3")), List.of("Column 1", "Column 2"), false, false, String.class, String.class);
+        public static final ConfigTable PRETTY_TABLE = new ConfigTable("Pretty table", "A table with a display string", "", "", "This is a pretty table!", List.of(List.of("Apple", 1, 0.5), List.of("Banana", 2, 0.75)), List.of("Fruit", "Quantity", "Price"), false, true, String.class, Integer.class, Double.class);
 
         public static final List<IConfigBase> OPTIONS = List.of(
                 STRING_LIST_1,
                 STRING_LIST_2,
                 STRING_MAP_3,
-                CURSED_TABLE
+                CURSED_TABLE,
+                EMPTY_TABLE,
+                PRETTY_TABLE
         );
     }
 
