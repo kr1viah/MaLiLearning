@@ -7,7 +7,7 @@ import fi.dy.masa.malilib.gui.interfaces.IDialogHandler;
 import fi.dy.masa.malilib.util.GuiUtils;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
-import org.kr1v.malilearning.client.malilib.gui.GuiMapEdit;
+import org.kr1v.malilearning.client.malilib.gui.GuiTableEdit;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class ConfigButtonTable extends ButtonGeneric {
         super.onMouseClickedImpl(mouseX, mouseY, mouseButton);
 
         if (this.dialogHandler != null) {
-            this.dialogHandler.openDialog(new GuiMapEdit(this.config, this.configGui, this.dialogHandler, null));
+            this.dialogHandler.openDialog(new GuiTableEdit(this.config, this.configGui, this.dialogHandler, null));
         } else {
-            GuiBase.openGui(new GuiMapEdit(this.config, this.configGui, null, GuiUtils.getCurrentScreen()));
+            GuiBase.openGui(new GuiTableEdit(this.config, this.configGui, null, GuiUtils.getCurrentScreen()));
         }
 
         return true;

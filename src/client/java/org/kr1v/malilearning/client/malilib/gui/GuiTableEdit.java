@@ -16,7 +16,7 @@ import org.kr1v.malilearning.client.malilib.gui.widgets.WidgetTableEditEntry;
 
 import java.util.List;
 
-public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
+public class GuiTableEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, WidgetListTableEdit> {
     protected final IConfigTable config;
     protected final IConfigGui configGui;
     protected int dialogWidth;
@@ -26,7 +26,7 @@ public class GuiMapEdit extends GuiListBase<List<Object>, WidgetTableEditEntry, 
     @Nullable
     protected final IDialogHandler dialogHandler;
 
-    public GuiMapEdit(IConfigTable config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler, Screen parent) {
+    public GuiTableEdit(IConfigTable config, IConfigGui configGui, @Nullable IDialogHandler dialogHandler, Screen parent) {
         super(0, 0);
 
         this.config = config;

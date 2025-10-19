@@ -3,7 +3,7 @@ package org.kr1v.malilearning.client.malilib.gui.widgets;
 import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptionsBase;
 import org.jetbrains.annotations.NotNull;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
-import org.kr1v.malilearning.client.malilib.gui.GuiMapEdit;
+import org.kr1v.malilearning.client.malilib.gui.GuiTableEdit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ public class WidgetListTableEdit extends WidgetListConfigOptionsBase<List<Object
 
     protected final IConfigTable config;
 
-    public WidgetListTableEdit(int x, int y, int width, int height, int configWidth, GuiMapEdit parent) {
+    public WidgetListTableEdit(int x, int y, int width, int height, int configWidth, GuiTableEdit parent) {
         super(x, y, width, height, configWidth);
 
         this.config = parent.getConfig();
