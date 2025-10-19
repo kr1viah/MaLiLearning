@@ -3,8 +3,12 @@ package org.kr1v.malilearning.client.malilib.config.options;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.PrimitiveCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fi.dy.masa.malilib.MaLiLib;
 import fi.dy.masa.malilib.config.options.ConfigBase;
+import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.kr1v.malilearning.client.malilib.config.IConfigTable;
@@ -12,48 +16,80 @@ import org.kr1v.malilearning.client.malilib.config.IConfigTable;
 import java.util.*;
 
 public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable {
-    // Is this necessary?
-//    public static final Codec<ConfigTable> CODEC = RecordCodecBuilder.create(
-//            inst -> inst.group(
-//                    PrimitiveCodec.STRING.fieldOf("name").forGetter(ConfigBase::getName),
-//                    Codecs.listOrSingle(PrimitiveCodec.STRING).fieldOf("defaultKeys").forGetter(get -> {
-//                        List<String> keys = new ArrayList<>();
-//                        for (Pair<String, String> entry : get.defaultMap) {
-//                            keys.add(entry.getRight());
-//                        }
-//                        return keys;
-//                    }),
-//                    Codecs.listOrSingle(PrimitiveCodec.STRING).fieldOf("defaultValues").forGetter(get -> {
-//                        List<String> values = new ArrayList<>();
-//                        for (Pair<String, String> entry : get.defaultMap) {
-//                            values.add(entry.getLeft());
-//                        }
-//                        return values;
-//                    }),
-//                    Codecs.listOrSingle(PrimitiveCodec.STRING).fieldOf("keys").forGetter(get -> {
-//                        List<String> keys = new ArrayList<>();
-//                        for (Pair<String, String> entry : get.map) {
-//                            keys.add(entry.getRight());
-//                        }
-//                        return keys;
-//                    }),
-//                    Codecs.listOrSingle(PrimitiveCodec.STRING).fieldOf("values").forGetter(get -> {
-//                        List<String> values = new ArrayList<>();
-//                        for (Pair<String, String> entry : get.map) {
-//                            values.add(entry.getLeft());
-//                        }
-//                        return values;
-//                    }),
-//                    PrimitiveCodec.STRING.fieldOf("comment").forGetter(get -> get.comment),
-//                    PrimitiveCodec.STRING.fieldOf("prettyName").forGetter(get -> get.prettyName),
-//                    PrimitiveCodec.STRING.fieldOf("translatedName").forGetter(get -> get.translatedName)
-//            ).apply(inst, ConfigTable::new)
-//    );
-
-//    private ConfigTable(String name, List<String> defaultKeys, List<String> defaultValues, List<String> keys, List<String> values, String comment, String prettyName, String translatedName) {
-//        this(name, getMapFrom2Lists(defaultKeys, defaultValues), comment, prettyName, translatedName);
-//        this.map.addAll(getMapFrom2Lists(keys, values));
-//    }
+    /*
+String name
+String comment
+String prettyName
+String translatedName
+@Nullable String displayString
+List<List<Object>> defaultValue
+List<List<Object>> value
+List<String> labels
+boolean showEntryNumbers
+boolean allowAddNewEntry
+Class<?>... types
+     */
+    public static final Codec<ConfigTable> CODEC = RecordCodecBuilder.create(
+            inst -> inst.group(
+                    PrimitiveCodec.STRING.fieldOf("name").forGetter(ConfigBase::getName),
+                    PrimitiveCodec.STRING.fieldOf("comment").forGetter(ConfigBase::getComment),
+                    PrimitiveCodec.STRING.fieldOf("prettyName").forGetter(ConfigBase::getPrettyName),
+                    PrimitiveCodec.STRING.fieldOf("translatedName").forGetter(ConfigBase::getTranslatedName),
+                    PrimitiveCodec.STRING.fieldOf("displayString").forGetter(get -> get.displayString == null ? "n" : "s" + get.displayString),
+                    Codecs.listOrSingle(PrimitiveCodec.STRING.listOf()).fieldOf("defaultTable").forGetter(get -> {
+                        List<List<String>> table = new ArrayList<>();
+                        for (List<Object> list : get.getDefaultTable()) {
+                            List<String> entry = new ArrayList<>();
+                            for (Object obj : list) {
+                                switch (obj) {
+                                    case String str -> entry.add("str" + str);
+                                    case Integer integer -> entry.add("int" + integer);
+                                    case Double dbl -> entry.add("dbl" + dbl);
+                                    default ->
+                                            throw new IllegalStateException("Unsupported type: " + obj.getClass().getName());
+                                }
+                            }
+                            table.add(entry);
+                        }
+                        return table;
+                    }),
+                    Codecs.listOrSingle(PrimitiveCodec.STRING.listOf()).fieldOf("table").forGetter(get -> {
+                        List<List<String>> table = new ArrayList<>();
+                        for (List<Object> list : get.getTable()) {
+                            List<String> entry = new ArrayList<>();
+                            for (Object obj : list) {
+                                switch (obj) {
+                                    case String str -> entry.add("str" + str);
+                                    case Integer integer -> entry.add("int" + integer);
+                                    case Double dbl -> entry.add("dbl" + dbl);
+                                    default ->
+                                            throw new IllegalStateException("Unsupported type: " + obj.getClass().getName());
+                                }
+                            }
+                            table.add(entry);
+                        }
+                        return table;
+                    }),
+                    Codecs.listOrSingle(PrimitiveCodec.STRING).fieldOf("labels").forGetter(ConfigTable::getLabels),
+                    PrimitiveCodec.BOOL.fieldOf("showEntryNumbers").forGetter(ConfigTable::showEntryNumbers),
+                    PrimitiveCodec.BOOL.fieldOf("allowNewEntry").forGetter(ConfigTable::allowNewEntry),
+                    PrimitiveCodec.STRING.listOf().fieldOf("types").forGetter(get -> {
+                        List<String> typeNames = new ArrayList<>();
+                        for (Class<?> type : get.types) {
+                            if (type == String.class) {
+                                typeNames.add("str");
+                            } else if (type == Integer.class) {
+                                typeNames.add("int");
+                            } else if (type == Double.class) {
+                                typeNames.add("dbl");
+                            } else {
+                                throw new IllegalStateException("Unsupported type: " + type.getName());
+                            }
+                        }
+                        return typeNames;
+                    })
+            ).apply(inst, ConfigTable::new)
+    );
 
     private final ImmutableList<List<Object>> defaultTable;
     private final List<List<Object>> table = new ArrayList<>();
@@ -62,6 +98,53 @@ public class ConfigTable extends ConfigBase<ConfigTable> implements IConfigTable
     private final List<String> labels;
     private final boolean allowNewEntry;
     private final boolean showEntryNumbers;
+
+    private ConfigTable(String name, String comment, String prettyName, String translatedName, String displayString, List<List<String>> defaultValue, List<List<String>> value, List<String> labels, Boolean showEntryNumbers, Boolean allowAddNewEntry, List<String> types) {
+        this(name, comment, prettyName, translatedName, strip(displayString), parse(defaultValue), labels, showEntryNumbers, allowAddNewEntry, parseTypes(types));
+        this.table.addAll(parse(value));
+    }
+
+    private static List<List<Object>> parse(List<List<String>> defaultValue) {
+        List<List<Object>> temp = new ArrayList<>();
+        for (List<String> list : defaultValue) {
+            List<Object> entryList = new ArrayList<>();
+            for (String entry : list) {
+                String typeName = entry.substring(0, 3);
+                String valueString = entry.substring(3);
+                switch (typeName) {
+                    case "str" -> entryList.add(valueString);
+                    case "int" -> entryList.add(Integer.valueOf(valueString));
+                    case "dbl" -> entryList.add(Double.valueOf(valueString));
+                    default -> throw new IllegalStateException("Unsupported type name: " + typeName);
+                }
+            }
+            temp.add(entryList);
+        }
+        return temp;
+    }
+
+    private static Class<?>[] parseTypes(List<String> types) {
+        List<Class<?>> temp = new ArrayList<>();
+        for (String typeName : types) {
+            switch (typeName) {
+                case "str" -> temp.add(String.class);
+                case "int" -> temp.add(Integer.class);
+                case "dbl" -> temp.add(Double.class);
+                default -> throw new IllegalStateException("Unsupported type name: " + typeName);
+            }
+        }
+        return temp.toArray(new Class<?>[0]);
+    }
+
+    private static @Nullable String strip(String displayString) {
+        if (displayString.equals("n")) {
+            return null;
+        } else if (displayString.startsWith("s")) {
+            return displayString.substring(1);
+        } else {
+            throw new IllegalStateException("Unsupported display string: " + displayString);
+        }
+    }
 
     public ConfigTable(String name, String comment, String prettyName, String translatedName,
                        @Nullable String displayString, List<List<Object>> defaultValue,
